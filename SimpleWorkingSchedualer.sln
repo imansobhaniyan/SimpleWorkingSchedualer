@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWorkingSchedualer", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWorkingSchedualer.StorageModels", "SimpleWorkingSchedualer.StorageModels\SimpleWorkingSchedualer.StorageModels.csproj", "{619249BF-C47C-43AA-B476-4689113B43C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWorkingSchedualer.DataAccessLayer", "SimpleWorkingSchedualer.DataAccessLayer\SimpleWorkingSchedualer.DataAccessLayer.csproj", "{CC3035D0-18F5-4CE2-9E04-D60D2A5D7D69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{619249BF-C47C-43AA-B476-4689113B43C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{619249BF-C47C-43AA-B476-4689113B43C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{619249BF-C47C-43AA-B476-4689113B43C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3035D0-18F5-4CE2-9E04-D60D2A5D7D69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3035D0-18F5-4CE2-9E04-D60D2A5D7D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC3035D0-18F5-4CE2-9E04-D60D2A5D7D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC3035D0-18F5-4CE2-9E04-D60D2A5D7D69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
