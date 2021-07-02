@@ -14,8 +14,24 @@ namespace SimpleWorkingSchedualer.Models.Login
 
     public class LoginResult
     {
-        public bool Success { get; set; }
+        private LoginResult(string token)
+        {
+            Success = !string.IsNullOrWhiteSpace(token);
+            Token = token;
+        }
 
-        public string Token { get; set; }
+        public bool Success { get; private set; }
+
+        public string Token { get; private set; }
+
+        public static LoginResult FailedResult()
+        {
+            return new LoginResult(null);
+        }
+
+        public static LoginResult SuccessResult(string token)
+        {
+            return new LoginResult(token);
+        }
     }
 }

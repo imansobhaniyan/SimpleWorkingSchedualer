@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using SimpleWorkingSchedualer.DataAccessLayer;
 using SimpleWorkingSchedualer.Models.Common;
 using SimpleWorkingSchedualer.Models.Login;
 
@@ -15,18 +17,42 @@ namespace SimpleWorkingSchedualer.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        [HttpPost]
-        public ApiResult<LoginResult> Post([FromBody] LoginModel model)
+        private readonly SimpleWorkingSchedualerDbContext dbContext;
+
+        public LoginController(SimpleWorkingSchedualerDbContext dbContext)
         {
-            return new ApiResult<LoginResult>
+            this.dbContext = dbContext;
+        }
+
+        [HttpPost]
+        public async Task<ApiResult<LoginResult>> Post([FromBody] LoginModel model)
+        {
+            try
             {
-                Success = true,
-                Data = new LoginResult
+                var user = await dbContext.Users.FirstOrDefaultAsync(f => f.UserName == model.UserName && f.Password == model.Password);
+
+                if (user == null)
+                    return new ApiResult<LoginResult>(LoginResult.FailedResult());
+
+                string token;
+
+                var random = new Random(DateTime.Now.Millisecond);
+
+                do
                 {
-                    Success = model.UserName == "admin" && model.Password == "admin",
-                    Token = "test token"
-                }
-            };
+                    token = string.Concat(Enumerable.Range(0, 100).Select(f => (char)random.Next('A', 'z')));
+                } while (await dbContext.Users.AnyAsync(f => f.Token == token));
+
+                user.Token = token;
+
+                await dbContext.SaveChangesAsync();
+
+                return new ApiResult<LoginResult>(LoginResult.SuccessResult(token));
+            }
+            catch (Exception exception)
+            {
+                return new ApiResult<LoginResult>(exception);
+            }
         }
     }
 }

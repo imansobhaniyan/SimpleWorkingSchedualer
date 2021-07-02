@@ -63,6 +63,9 @@ namespace SimpleWorkingSchedualer
 
             app.UseRouting();
 
+            using (var scope = app.ApplicationServices.CreateScope())
+                scope.ServiceProvider.GetRequiredService<SimpleWorkingSchedualerDbContext>().Database.Migrate();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
