@@ -11,6 +11,7 @@ import { CounterComponent } from './pages/counter/counter.component';
 import { FetchDataComponent } from './pages/fetch-data/fetch-data.component';
 import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { HttpClientHelper } from './utilities/HttpClientHelper';
 
 @NgModule({
   declarations: [

@@ -1,1 +1,23 @@
-<p>login works!</p>
+<div class="center-center w-25">
+    <form class="card" (submit)="this.login()">
+        <div class="card-header text-center">Welcome back {{userName}}</div>
+        <div class="card-body">
+            <div class="text-white text-center bg-danger rounded py-2" *ngIf="this.isInvalidCredential">Invalid user name and/or password</div>
+            <div class="row mt-3">
+                <div class="col-md-4 text-center">User name: </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" [(ngModel)]="userName" name="userName" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4 text-center">Password: </div>
+                <div class="col-md-8">
+                    <input type="password" class="form-control" [(ngModel)]="password" name="password" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <button type="submit" class="btn btn-success" [disabled]="this.isLoading || userName == '' || password == ''">{{this.isLoading ? "Please wait" : "Login"}}</button>
+        </div>
+    </form>
+</div>

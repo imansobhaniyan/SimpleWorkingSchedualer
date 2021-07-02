@@ -1,10 +1,12 @@
 import { HttpClient } from "@angular/common/http";
-import { Inject } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
 import ApiResult from "../models/api-result";
 
-export default class HttpClientHelper {
+@Injectable({
+    providedIn: 'root',
+})
+export class HttpClientHelper {
 
     private baseUrl: string;
 
