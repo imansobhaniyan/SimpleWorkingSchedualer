@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import LoginResult from 'src/app/models/LoginResult';
 import { HttpClientHelper } from 'src/app/utilities/HttpClientHelper';
 import LocalStorageHelper from 'src/app/utilities/LocalStorageHelper';
 
@@ -29,8 +30,15 @@ export class LoginComponent {
 
   login(): void {
     this.isLoading = !this.isLoading;
-    this.httpClient.post('/api/login', { userName: this.userName, password: this.password }, result => {
-      this.isInvalidCredential = !this.isInvalidCredential;
+    this.httpClient.post<LoginResult>('api/login', { userName: this.userName, password: this.password }, result => {
+      if (!result.success) {
+        this.isInvalidCredential = !this.isInvalidCredential;
+      }
+      else {
+        LocalStorageHelper.setToken(result.token);
+        this.router.navigate(['']);
+      }
+      this.isLoading = false;
     });
   }
 
