@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31410.223
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWorkingSchedualer", "SimpleWorkingSchedualer\SimpleWorkingSchedualer.csproj", "{D6AEBE39-DD88-43C3-988D-EF32D4FC9F3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWorkingSchedualer.StorageModels", "SimpleWorkingSchedualer.StorageModels\SimpleWorkingSchedualer.StorageModels.csproj", "{619249BF-C47C-43AA-B476-4689113B43C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D6AEBE39-DD88-43C3-988D-EF32D4FC9F3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6AEBE39-DD88-43C3-988D-EF32D4FC9F3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6AEBE39-DD88-43C3-988D-EF32D4FC9F3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{619249BF-C47C-43AA-B476-4689113B43C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{619249BF-C47C-43AA-B476-4689113B43C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{619249BF-C47C-43AA-B476-4689113B43C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{619249BF-C47C-43AA-B476-4689113B43C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
