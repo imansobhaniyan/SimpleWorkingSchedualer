@@ -27,9 +27,14 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'login', component: LoginComponent },
+      {
+        path: '', component: MainLayoutComponent, children: [
+          { path: '', component: HomeComponent, pathMatch: 'full' },
+          { path: 'counter', component: CounterComponent },
+          { path: 'fetch-data', component: FetchDataComponent },
+        ]
+      }
     ])
   ],
   providers: [],
