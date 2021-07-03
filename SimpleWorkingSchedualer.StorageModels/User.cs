@@ -8,6 +8,11 @@ namespace SimpleWorkingSchedualer.StorageModels
 {
     public class User
     {
+        public User()
+        {
+            UserTasks = new List<UserTask>();
+        }
+
         public int Id { get; set; }
 
         public string UserName { get; set; }
@@ -17,6 +22,8 @@ namespace SimpleWorkingSchedualer.StorageModels
         public string Token { get; set; }
 
         public UserRole Role { get; set; }
+
+        public List<UserTask> UserTasks { get; set; }
 
         public enum UserRole
         {
