@@ -1,14 +1,15 @@
-<div class="row">
+<div class="row mt-5">
   <div class="col-md-9">
     <fa-icon [icon]="faLongArrowDown"></fa-icon>
     <h1 class="d-inline">2-8 Dec 2018 [Week #49]</h1>
   </div>
   <div class="col-md-3 text-right">
-    <button class="btn btn-secondary btn-sm w-25 mx-2">&lt;&lt;</button>
-    <button class="btn btn-secondary btn-sm w-25 mx-2">&gt;&gt;</button>
+    <button class="btn btn-secondary btn-sm w-25 mx-2" (click)="this.fillColumns(this.weekIndex - 1)">&lt;&lt;</button>
+    <button class="btn btn-secondary btn-sm w-25 mx-2" (click)="this.fillColumns(this.weekIndex + 1)">&gt;&gt;</button>
   </div>
 </div>
-<div class="row mt-3">
+
+<div class="row mt-4">
   <div class="col-md-3">
     <fa-icon [icon]="faLongArrowDown"></fa-icon> View <b>Week</b>
   </div>
@@ -23,17 +24,14 @@
   </div>
 </div>
 
-<div class="table-responsive mt-4">
+<div class="table-responsive mt-5">
   <table class="table table-bordered">
     <thead>
       <tr>
-        <td>2 Des 2018</td>
-        <td>3 Des 2018</td>
-        <td>4 Des 2018</td>
-        <td>5 Des 2018</td>
-        <td>6 Des 2018</td>
-        <td>7 Des 2018</td>
-        <td>8 Des 2018</td>
+        <td *ngFor="let column of columns" class="{{column.isToday ? 'bg-secondary text-lights' : ''}}}">
+          <span class="d-block text-center">{{column.title}}</span>
+          <span class="d-block text-center">{{column.subTitle}}</span>
+        </td>
       </tr>
     </thead>
     <tbody>
