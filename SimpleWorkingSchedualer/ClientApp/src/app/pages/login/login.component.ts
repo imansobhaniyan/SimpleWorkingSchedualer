@@ -26,14 +26,17 @@ export class LoginComponent {
   constructor(router: Router, httpCLientHelper: HttpClientHelper) {
     this.router = router;
     this.httpClient = httpCLientHelper;
+
+    if (LocalStorageHelper.hasToken())
+      this.router.navigate(['']);
   }
 
   login(): void {
-    this.isLoading = !this.isLoading;
+    this.isLoading = true;
+    this.isInvalidCredential = false;
     this.httpClient.post<LoginResult>('api/login', { userName: this.userName, password: this.password }, result => {
-      if (!result.success) {
-        this.isInvalidCredential = !this.isInvalidCredential;
-      }
+      if (!result.success)
+        this.isInvalidCredential = true;
       else {
         LocalStorageHelper.setToken(result.token);
         this.router.navigate(['']);

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
+using SimpleWorkingSchedualer.StorageModels;
+
 namespace SimpleWorkingSchedualer.DataAccessLayer.Migrations
 {
     public partial class init : Migration
@@ -21,6 +23,16 @@ namespace SimpleWorkingSchedualer.DataAccessLayer.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserName", "Password", "Role" },
+                values: new object[] { "admin", "admin", (int)User.UserRole.Admin });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserName", "Password", "Role" },
+                values: new object[] { "user", "user", (int)User.UserRole.User });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
