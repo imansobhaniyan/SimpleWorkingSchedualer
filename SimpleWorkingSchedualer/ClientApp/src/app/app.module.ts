@@ -7,19 +7,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './pages/home/home.component';
-import { CounterComponent } from './pages/counter/counter.component';
-import { FetchDataComponent } from './pages/fetch-data/fetch-data.component';
 import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { HttpClientHelper } from './utilities/HttpClientHelper';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     LoginComponent,
     MainLayoutComponent
   ],
@@ -31,9 +26,7 @@ import { HttpClientHelper } from './utilities/HttpClientHelper';
       { path: 'login', component: LoginComponent },
       {
         path: '', component: MainLayoutComponent, children: [
-          { path: '', component: HomeComponent, pathMatch: 'full' },
-          { path: 'counter', component: CounterComponent },
-          { path: 'fetch-data', component: FetchDataComponent },
+          { path: '', component: HomeComponent, pathMatch: 'full' }
         ]
       }
     ])

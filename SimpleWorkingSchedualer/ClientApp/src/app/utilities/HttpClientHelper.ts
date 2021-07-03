@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import ApiResult from "../models/api-result";
+import ApiResult from "../models/ApiResult";
 
 @Injectable({
     providedIn: 'root',
