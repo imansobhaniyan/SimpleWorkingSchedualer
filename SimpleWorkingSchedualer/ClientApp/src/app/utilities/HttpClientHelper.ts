@@ -23,8 +23,10 @@ export class HttpClientHelper {
 
     public post<T>(url: string, body: any, callBack: (result: T) => void): void {
         this.httpClient.post<ApiResult<T>>(this.baseUrl + url, body).subscribe(result => {
-            if (!result.success && result.error === 'invalid token')
+            if (!result.success && result.error === 'invalid token') {
+                LocalStorageHelper.setToken('');
                 this.router.navigate(['login']);
+            }
             else
                 callBack(result.data);
         }, error => console.error(error));
@@ -32,8 +34,10 @@ export class HttpClientHelper {
 
     public get<T>(url: string, callBack: (result: T) => void) {
         this.httpClient.get<ApiResult<T>>(this.baseUrl + url, { headers: this.getHeaders() }).subscribe(result => {
-            if (!result.success && result.error === 'invalid token')
+            if (!result.success && result.error === 'invalid token') {
+                LocalStorageHelper.setToken('');
                 this.router.navigate(['login']);
+            }
             else
                 callBack(result.data);
         }, error => console.error(error));
@@ -41,7 +45,7 @@ export class HttpClientHelper {
 
     private getHeaders(): HttpHeaders {
         let headers = new HttpHeaders();
-        headers.append('token', LocalStorageHelper.getToken());
+        headers = headers.append('token', LocalStorageHelper.getToken());
 
         return headers;
     }

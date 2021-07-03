@@ -37,7 +37,7 @@ namespace SimpleWorkingSchedualer.Controllers
 
                 var user = await dbContext.Users
                     .Include(f => f.UserTasks).ThenInclude(f => f.UserTaskStatusHistories)
-                    .FirstOrDefaultAsync(f => f.Token == token);
+                    .FirstOrDefaultAsync(f => f.Token == token.ToString());
 
                 if (user == null)
                     throw new Exception("invalid token");
