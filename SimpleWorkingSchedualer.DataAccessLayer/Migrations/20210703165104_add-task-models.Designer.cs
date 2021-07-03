@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleWorkingSchedualer.DataAccessLayer;
 
 namespace SimpleWorkingSchedualer.DataAccessLayer.Migrations
 {
     [DbContext(typeof(SimpleWorkingSchedualerDbContext))]
-    partial class SimpleWorkingSchedualerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210703165104_add-task-models")]
+    partial class addtaskmodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
