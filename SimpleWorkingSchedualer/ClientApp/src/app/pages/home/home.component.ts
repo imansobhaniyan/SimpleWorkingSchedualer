@@ -39,10 +39,6 @@ export class HomeComponent {
 
   isAdmin: boolean;
 
-  @Input() pending: TaskStatus.Pending;
-  @Input() approved: TaskStatus.Approved;
-  @Input() rejected: TaskStatus.Rejected;
-
   constructor(taskService: TaskService) {
     this.taskService = taskService;
     this.isAdmin = LocalStorageHelper.getRole() == 1;
@@ -80,17 +76,7 @@ export class HomeComponent {
 
     this.editingUserTask = userTask;
     this.isEditing = true;
-    this.editingItem = new TaskModel();
-    if (!existingTask) {
-      this.editingItem.status = TaskStatus.Pending;
-      this.editingItem.date = column.value;
-    } else {
-      this.editingItem.date = existingTask.date;
-      this.editingItem.description = existingTask.description;
-      this.editingItem.id = existingTask.id;
-      this.editingItem.status = existingTask.status;
-      this.editingItem.title = existingTask.title;
-    }
+    this.editingItem = TaskModel.clone(existingTask);
   }
 
   cancelEditing(): void {
@@ -102,16 +88,10 @@ export class HomeComponent {
     this.taskService.save(this.editingItem, editResult => {
       editResult.date = new Date(Date.parse(editResult.date.toString()));
       if (!this.editingItem.id) {
-        editResult.date = editResult.date;
         this.editingUserTask.taskResults.push(editResult);
       }
       var existingTask = this.getTask(this.editingUserTask, editResult.date);
-      if (existingTask != null) {
-        existingTask.description = editResult.description;
-        existingTask.title = editResult.title;
-        existingTask.id = editResult.id;
-        existingTask.status = editResult.status;
-      }
+      TaskModel.extend(existingTask, editResult);
       this.isSaving = false;
       this.saved = true;
       setTimeout(() => {
@@ -138,27 +118,21 @@ export class HomeComponent {
   reject(): void {
     this.editingItem.status = TaskStatus.Rejected;
     this.isRejectSaving = true;
-    this.taskService.setStatus(this.editingItem, editResult => {
-      var existingTask = this.getTask(this.editingUserTask, this.editingItem.date);
-      existingTask.status = this.editingItem.status;
-      this.isRejectSaving = false;
-      this.saved = true;
-      setTimeout(() => {
-        this.saved = false;
-        this.isEditing = false;
-        this.fillColumns(this.weekIndex - 1);
-        this.fillColumns(this.weekIndex + 1);
-      }, 3000);
-    });
+    this.updateStatus();
   }
 
   approve(): void {
     this.editingItem.status = TaskStatus.Approved;
     this.isApproveSaving = true;
+    this.updateStatus();
+  }
+
+  private updateStatus(){
     this.taskService.setStatus(this.editingItem, editResult => {
       var existingTask = this.getTask(this.editingUserTask, this.editingItem.date);
       existingTask.status = this.editingItem.status;
       this.isApproveSaving = false;
+      this.isRejectSaving = false;
       this.saved = true;
       setTimeout(() => {
         this.saved = false;
