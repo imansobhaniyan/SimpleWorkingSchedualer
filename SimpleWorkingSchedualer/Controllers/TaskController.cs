@@ -72,7 +72,7 @@ namespace SimpleWorkingSchedualer.Controllers
                 task.Title = model.Title;
                 task.TaskDate = model.Date.Date;
                 task.User = user;
-                task.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = StorageModels.UserTaskStatusHistory.TaskStatus.Pending });
+                task.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = (StorageModels.UserTaskStatusHistory.TaskStatus)model.Status });
 
                 if (task.Id == 0)
                     await dbContext.UserTasks.AddAsync(task);

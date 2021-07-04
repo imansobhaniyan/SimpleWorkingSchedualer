@@ -47,7 +47,7 @@ namespace SimpleWorkingSchedualer.Controllers
 
                 await dbContext.SaveChangesAsync();
 
-                return new ApiResult<LoginResult>(LoginResult.SuccessResult(token));
+                return new ApiResult<LoginResult>(LoginResult.SuccessResult(token, user.Role));
             }
             catch (Exception exception)
             {

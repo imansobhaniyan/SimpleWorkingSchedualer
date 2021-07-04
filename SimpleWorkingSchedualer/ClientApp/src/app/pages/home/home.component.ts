@@ -3,6 +3,7 @@ import { faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
 import TaskModel, { TaskStatus } from 'src/app/models/TaskModel';
 import { TaskService } from 'src/app/services/task.service';
 import DateHelper from 'src/app/utilities/DateHelper';
+import LocalStorageHelper from 'src/app/utilities/LocalStorageHelper';
 import ColumnModel from './models/ColumnModel';
 
 @Component({
@@ -29,12 +30,15 @@ export class HomeComponent {
 
   editingItem: TaskModel;
 
+  isAdmin: boolean;
+
   @Input() pending: TaskStatus.Pending;
   @Input() approved: TaskStatus.Approved;
   @Input() rejected: TaskStatus.Rejected;
 
   constructor(taskService: TaskService) {
     this.taskService = taskService;
+    this.isAdmin = LocalStorageHelper.getRole() == 1;
     this.fillColumns();
     this.loadTasks();
   }
@@ -92,6 +96,7 @@ export class HomeComponent {
         existingTask.description = editResult.description;
         existingTask.title = editResult.title;
         existingTask.id = editResult.id;
+        existingTask.status = editResult.status;
       }
       this.isSaving = false;
       this.saved = true;
@@ -110,5 +115,13 @@ export class HomeComponent {
       if (task.date.getDate() === date.getDate())
         return task;
     }
+  }
+
+  reject(): void {
+    this.editingItem.status = TaskStatus.Rejected;
+  }
+
+  approve(): void {
+    this.editingItem.status = TaskStatus.Approved;
   }
 }

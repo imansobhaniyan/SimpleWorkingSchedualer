@@ -39,6 +39,7 @@ export class LoginComponent {
         this.isInvalidCredential = true;
       else {
         LocalStorageHelper.setToken(result.token);
+        LocalStorageHelper.setRole(result.userRole);
         this.router.navigate(['']);
       }
       this.isLoading = false;
