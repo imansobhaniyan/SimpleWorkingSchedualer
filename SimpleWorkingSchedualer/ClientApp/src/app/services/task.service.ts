@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import TaskModel from '../models/TaskModel';
+import UserTaskModel from '../models/UserTaskModel';
 import DateHelper from '../utilities/DateHelper';
 import { HttpClientHelper } from '../utilities/HttpClientHelper';
 
@@ -14,8 +15,8 @@ export class TaskService {
     this.httpClient = httpClient;
   }
 
-  public getAllTasks(callback: (tasks: TaskModel[]) => void) {
-    this.httpClient.get<TaskModel[]>('api/task', callback);
+  public getAllTasks(callback: (tasks: UserTaskModel[]) => void) {
+    this.httpClient.get<UserTaskModel[]>('api/task', callback);
   }
 
   public save(task: TaskModel, callback: (task: TaskModel) => void): void {

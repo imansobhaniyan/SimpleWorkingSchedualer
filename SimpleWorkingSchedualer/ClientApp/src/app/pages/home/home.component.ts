@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
 import TaskModel, { TaskStatus } from 'src/app/models/TaskModel';
+import UserTaskModel from 'src/app/models/UserTaskModel';
 import { TaskService } from 'src/app/services/task.service';
 import DateHelper from 'src/app/utilities/DateHelper';
 import LocalStorageHelper from 'src/app/utilities/LocalStorageHelper';
@@ -20,7 +21,7 @@ export class HomeComponent {
 
   taskService: TaskService;
 
-  tasks: TaskModel[];
+  userTasks: UserTaskModel[];
 
   isEditing: boolean;
 
@@ -29,6 +30,8 @@ export class HomeComponent {
   saved: boolean;
 
   editingItem: TaskModel;
+
+  editingUserTask: UserTaskModel;
 
   isAdmin: boolean;
 
@@ -54,18 +57,25 @@ export class HomeComponent {
   }
 
   private loadTasks(): void {
-    this.taskService.getAllTasks(tasks => {
-      for (let index = 0; index < tasks.length; index++) {
-        const task = tasks[index];
-        task.date = new Date(Date.parse(task.date.toString()));
+    this.taskService.getAllTasks(userTasks => {
+      for (let index = 0; index < userTasks.length; index++) {
+        const userTask = userTasks[index];
+        for (let taskIndex = 0; taskIndex < userTask.taskResults.length; taskIndex++) {
+          const task = userTask.taskResults[taskIndex];
+          task.date = new Date(Date.parse(task.date.toString()));
+        }
       }
-      this.tasks = tasks;
+      this.userTasks = userTasks;
     });
   }
 
-  columnClicked(column: ColumnModel): void {
+  columnClicked(userTask: UserTaskModel, column: ColumnModel): void {
+    let existingTask = this.getTask(userTask, column.value);
+    if (!existingTask && this.isAdmin)
+      return;
+      
+    this.editingUserTask = userTask;
     this.isEditing = true;
-    let existingTask = this.getTask(column.value);
     this.editingItem = new TaskModel();
     if (!existingTask) {
       this.editingItem.status = TaskStatus.Pending;
@@ -89,9 +99,9 @@ export class HomeComponent {
       editResult.date = new Date(Date.parse(editResult.date.toString()));
       if (!this.editingItem.id) {
         editResult.date = editResult.date;
-        this.tasks.push(editResult);
+        this.editingUserTask.taskResults.push(editResult);
       }
-      var existingTask = this.getTask(editResult.date);
+      var existingTask = this.getTask(this.editingUserTask, editResult.date);
       if (existingTask != null) {
         existingTask.description = editResult.description;
         existingTask.title = editResult.title;
@@ -109,11 +119,15 @@ export class HomeComponent {
     });
   }
 
-  getTask(date: Date): TaskModel {
-    for (let index = 0; index < this.tasks.length; index++) {
-      const task = this.tasks[index];
-      if (task.date.getDate() === date.getDate())
-        return task;
+  getTask(userTask: UserTaskModel, date: Date): TaskModel {
+    for (let userTaskIndex = 0; userTaskIndex < this.userTasks.length; userTaskIndex++) {
+      const currentUserTask = this.userTasks[userTaskIndex];
+      if (currentUserTask.id == userTask.id)
+        for (let index = 0; index < currentUserTask.taskResults.length; index++) {
+          const task = currentUserTask.taskResults[index];
+          if (task.date.getDate() === date.getDate())
+            return task;
+        }
     }
   }
 

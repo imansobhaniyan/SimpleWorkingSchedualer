@@ -28,20 +28,22 @@
   <table class="table table-bordered">
     <thead>
       <tr>
+        <td></td>
         <td *ngFor="let column of columns" class="{{column.isToday ? 'bg-secondary text-lights' : ''}}}">
           <span class="d-block text-center">{{column.title}}</span>
           <span class="d-block text-center">{{column.subTitle}}</span>
         </td>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngIf="this.tasks">
-        <td *ngFor="let column of columns" class="h-73" (click)="columnClicked(column)">
-          <div class="card" *ngIf="getTask(column.value)" [ngClass]="{
-              'bg-warning': getTask(column.value).status === 1,
-              'bg-success': getTask(column.value).status === 2,
-              'bg-danger': getTask(column.value).status === 3}">
-            <div class="card-body">{{getTask(column.value).title}}</div>
+    <tbody *ngIf="this.userTasks">
+      <tr *ngFor="let userTask of userTasks">
+        <td>{{userTask.userName}}</td>
+        <td *ngFor="let column of columns" class="h-73" (click)="columnClicked(userTask, column)">
+          <div class="card" *ngIf="getTask(userTask, column.value)" [ngClass]="{
+              'bg-warning': getTask(userTask, column.value).status === 1,
+              'bg-success': getTask(userTask, column.value).status === 2,
+              'bg-danger': getTask(userTask, column.value).status === 3}">
+            <div class="card-body">{{getTask(userTask, column.value).title}}</div>
           </div>
         </td>
       </tr>

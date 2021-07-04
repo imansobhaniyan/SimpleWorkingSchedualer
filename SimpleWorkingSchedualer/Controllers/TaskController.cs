@@ -26,7 +26,7 @@ namespace SimpleWorkingSchedualer.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResult<List<TaskResult>>> Get()
+        public async Task<ApiResult<List<UserTaskResult>>> Get()
         {
             try
             {
@@ -35,18 +35,17 @@ namespace SimpleWorkingSchedualer.Controllers
                 if (token == StringValues.Empty)
                     throw new Exception("invalid token");
 
-                var user = await dbContext.Users
+                var users = await dbContext.Users
                     .Include(f => f.UserTasks).ThenInclude(f => f.UserTaskStatusHistories)
-                    .FirstOrDefaultAsync(f => f.Token == token.ToString());
+                    .Where(f => dbContext.Users.Any(x => x.Role == StorageModels.User.UserRole.Admin && x.Token == token.ToString()) ? f.Token != token.ToString() : f.Token == token.ToString())
+                    .ToListAsync();
 
-                if (user == null)
-                    throw new Exception("invalid token");
 
-                return new ApiResult<List<TaskResult>>(user.UserTasks.ConvertAll(task => new TaskResult(task)));
+                return new ApiResult<List<UserTaskResult>>(users.ConvertAll(user => new UserTaskResult(user)));
             }
             catch (Exception exception)
             {
-                return new ApiResult<List<TaskResult>>(exception);
+                return new ApiResult<List<UserTaskResult>>(exception);
             }
         }
 
