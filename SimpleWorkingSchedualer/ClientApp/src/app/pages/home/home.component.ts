@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
 import TaskModel, { TaskStatus } from 'src/app/models/TaskModel';
 import UserTaskModel from 'src/app/models/UserTaskModel';
+import { SignalRService } from 'src/app/services/signal-r.service';
 import { TaskService } from 'src/app/services/task.service';
 import DateHelper from 'src/app/utilities/DateHelper';
 import LocalStorageHelper from 'src/app/utilities/LocalStorageHelper';
@@ -39,9 +40,13 @@ export class HomeComponent {
 
   isAdmin: boolean;
 
-  constructor(taskService: TaskService) {
+  constructor(taskService: TaskService, signalRService: SignalRService) {
     this.taskService = taskService;
     this.isAdmin = LocalStorageHelper.getRole() == 1;
+    signalRService.startConnection();
+    signalRService.onUpdateStatus((updated: TaskModel) => {
+      this.statusUpdated(updated);
+    });
     this.fillColumns();
     this.loadTasks();
   }
@@ -141,5 +146,19 @@ export class HomeComponent {
         this.fillColumns(this.weekIndex + 1);
       }, 3000);
     });
+  }
+
+  statusUpdated(this: HomeComponent, taskModel: TaskModel): void {
+    for (let index = 0; index < this.userTasks.length; index++) {
+      const userTask = this.userTasks[index];
+      for (let taskIndex = 0; taskIndex < userTask.taskResults.length; taskIndex++) {
+        const task = userTask.taskResults[taskIndex];
+        if (task.id == taskModel.id)
+          task.status = taskModel.status;
+      }
+    }
+
+    this.fillColumns(this.weekIndex - 1);
+    this.fillColumns(this.weekIndex + 1);
   }
 }

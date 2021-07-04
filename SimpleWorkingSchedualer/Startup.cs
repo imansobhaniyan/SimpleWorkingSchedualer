@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using SimpleWorkingSchedualer.DataAccessLayer;
+using SimpleWorkingSchedualer.Hubs;
+using SimpleWorkingSchedualer.Services;
 
 namespace SimpleWorkingSchedualer
 {
@@ -34,6 +36,11 @@ namespace SimpleWorkingSchedualer
 
                 options.UseSqlServer(conBuilder.Build());
             });
+
+            services.AddSignalR();
+            services.AddSingleton<DefaultHub>();
+            services.AddSingleton<DefaultHubClient>();
+
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
@@ -68,6 +75,8 @@ namespace SimpleWorkingSchedualer
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<DefaultHub>("/hub");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");

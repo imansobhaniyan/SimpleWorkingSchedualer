@@ -6,6 +6,7 @@ using Microsoft.Extensions.Primitives;
 using SimpleWorkingSchedualer.DataAccessLayer;
 using SimpleWorkingSchedualer.Models.Common;
 using SimpleWorkingSchedualer.Models.Task;
+using SimpleWorkingSchedualer.Services;
 
 using System;
 using System.Collections.Generic;
@@ -20,9 +21,12 @@ namespace SimpleWorkingSchedualer.Controllers
     {
         private readonly SimpleWorkingSchedualerDbContext dbContext;
 
-        public TaskController(SimpleWorkingSchedualerDbContext dbContext)
+        private readonly DefaultHubClient defaultHubClient;
+
+        public TaskController(SimpleWorkingSchedualerDbContext dbContext, DefaultHubClient defaultHubClient)
         {
             this.dbContext = dbContext;
+            this.defaultHubClient = defaultHubClient;
         }
 
         [HttpGet]
@@ -91,7 +95,11 @@ namespace SimpleWorkingSchedualer.Controllers
 
                 await dbContext.SaveChangesAsync();
 
-                return new ApiResult<TaskResult>(new TaskResult(userTask));
+                var result = new TaskResult(userTask);
+
+                await defaultHubClient.UpdateStatus(result);
+
+                return new ApiResult<TaskResult>(result);
             }
             catch (Exception exception)
             {

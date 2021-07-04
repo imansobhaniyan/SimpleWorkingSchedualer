@@ -58,13 +58,14 @@
     <div class="d-block text-center alert-success rounded" *ngIf="this.saved">Task saved succesfuly</div>
     <div class="row mt-3">
       <div class="col-md-4">Title: </div>
-      <div class="col-md-8"><input type="text" class="form-control" [(ngModel)]="this.editingItem.title" name="title" />
+      <div class="col-md-8"><input type="text" class="form-control" [(ngModel)]="this.editingItem.title"
+          [readOnly]="this.isAdmin" name="title" />
       </div>
     </div>
     <div class="row mt-3">
       <div class="col-md-4">Description: </div>
       <div class="col-md-8"><textarea class="form-control" [(ngModel)]="this.editingItem.description"
-          name="description"></textarea></div>
+          [readOnly]="this.isAdmin" name="description"></textarea></div>
     </div>
   </div>
   <div class="card-footer text-center">
