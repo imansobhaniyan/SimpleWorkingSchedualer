@@ -15,5 +15,7 @@ namespace SimpleWorkingSchedualer.DataAccessLayer
         }
 
         public DbSet<StorageModels.User> Users { get; set; }
+
+        public DbSet<StorageModels.UserTask> UserTasks { get; set; }
     }
 }

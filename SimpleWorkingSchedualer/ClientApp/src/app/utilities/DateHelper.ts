@@ -8,8 +8,13 @@ export default class DateHelper {
         var date = new Date();
 
         date.setDate(date.getDate() - date.getDay() + (weekIndex * 7));
+        date.setHours(0, 0, 0, 0);
 
         return date;
+    }
+
+    public static addDays(date: Date, days: number = 1) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days, 0, 0, 0, 0);
     }
 
     public static formatDate(date: Date): string {

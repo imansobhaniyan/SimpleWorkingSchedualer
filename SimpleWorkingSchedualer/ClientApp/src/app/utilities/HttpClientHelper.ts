@@ -22,7 +22,7 @@ export class HttpClientHelper {
     }
 
     public post<T>(url: string, body: any, callBack: (result: T) => void): void {
-        this.httpClient.post<ApiResult<T>>(this.baseUrl + url, body).subscribe(result => {
+        this.httpClient.post<ApiResult<T>>(this.baseUrl + url, body, { headers: this.getHeaders() }).subscribe(result => {
             if (!result.success && result.error === 'invalid token') {
                 LocalStorageHelper.setToken('');
                 this.router.navigate(['login']);
@@ -45,7 +45,8 @@ export class HttpClientHelper {
 
     private getHeaders(): HttpHeaders {
         let headers = new HttpHeaders();
-        headers = headers.append('token', LocalStorageHelper.getToken());
+        if (LocalStorageHelper.hasToken())
+            headers = headers.append('token', LocalStorageHelper.getToken());
 
         return headers;
     }

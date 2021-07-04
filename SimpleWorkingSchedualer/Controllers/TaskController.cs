@@ -42,18 +42,48 @@ namespace SimpleWorkingSchedualer.Controllers
                 if (user == null)
                     throw new Exception("invalid token");
 
-                return new ApiResult<List<TaskResult>>(user.UserTasks.ConvertAll(f => new TaskResult
-                {
-                    Id = f.Id,
-                    Title = f.Title,
-                    Description = f.Description,
-                    Date = f.TaskDate,
-                    Status = (int)f.UserTaskStatusHistories.OrderByDescending(x => x.CreateDate).Select(x => x.Status).FirstOrDefault()
-                }));
+                return new ApiResult<List<TaskResult>>(user.UserTasks.ConvertAll(task => new TaskResult(task)));
             }
             catch (Exception exception)
             {
                 return new ApiResult<List<TaskResult>>(exception);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ApiResult<TaskResult>> Post([FromBody] TaskModel model)
+        {
+            try
+            {
+                var token = Request.Headers["token"];
+
+                if (token == StringValues.Empty)
+                    throw new Exception("invalid token");
+
+                var user = await dbContext.Users
+                    .FirstOrDefaultAsync(f => f.Token == token.ToString());
+
+                if (user == null)
+                    throw new Exception("invalid token");
+
+                var task = model.Id == 0 ? new StorageModels.UserTask() : await dbContext.UserTasks.FirstOrDefaultAsync(f => f.Id == model.Id);
+
+                task.Description = model.Description;
+                task.Title = model.Title;
+                task.TaskDate = model.Date.Date;
+                task.User = user;
+                task.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = StorageModels.UserTaskStatusHistory.TaskStatus.Pending });
+
+                if (task.Id == 0)
+                    await dbContext.UserTasks.AddAsync(task);
+
+                await dbContext.SaveChangesAsync();
+
+                return new ApiResult<TaskResult>(new TaskResult(task));
+            }
+            catch (Exception exception)
+            {
+                return new ApiResult<TaskResult>(exception);
             }
         }
     }
