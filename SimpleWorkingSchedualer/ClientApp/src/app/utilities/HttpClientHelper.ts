@@ -32,6 +32,17 @@ export class HttpClientHelper {
         }, error => console.error(error));
     }
 
+    public put<T>(url: string, body: any, callBack: (result: T) => void): void {
+        this.httpClient.put<ApiResult<T>>(this.baseUrl + url, body, { headers: this.getHeaders() }).subscribe(result => {
+            if (!result.success && result.error === 'invalid token') {
+                LocalStorageHelper.setToken('');
+                this.router.navigate(['login']);
+            }
+            else
+                callBack(result.data);
+        }, error => console.error(error));
+    }
+
     public get<T>(url: string, callBack: (result: T) => void) {
         this.httpClient.get<ApiResult<T>>(this.baseUrl + url, { headers: this.getHeaders() }).subscribe(result => {
             if (!result.success && result.error === 'invalid token') {

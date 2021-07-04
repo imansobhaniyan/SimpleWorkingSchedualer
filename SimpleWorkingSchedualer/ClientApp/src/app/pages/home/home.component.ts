@@ -27,6 +27,10 @@ export class HomeComponent {
 
   isSaving: boolean;
 
+  isRejectSaving: boolean;
+  
+  isApproveSaving: boolean;
+
   saved: boolean;
 
   editingItem: TaskModel;
@@ -73,7 +77,7 @@ export class HomeComponent {
     let existingTask = this.getTask(userTask, column.value);
     if (!existingTask && this.isAdmin)
       return;
-      
+
     this.editingUserTask = userTask;
     this.isEditing = true;
     this.editingItem = new TaskModel();
@@ -133,9 +137,35 @@ export class HomeComponent {
 
   reject(): void {
     this.editingItem.status = TaskStatus.Rejected;
+    this.isRejectSaving = true;
+    this.taskService.setStatus(this.editingItem, editResult => {
+      var existingTask = this.getTask(this.editingUserTask, this.editingItem.date);
+      existingTask.status = this.editingItem.status;
+      this.isRejectSaving = false;
+      this.saved = true;
+      setTimeout(() => {
+        this.saved = false;
+        this.isEditing = false;
+        this.fillColumns(this.weekIndex - 1);
+        this.fillColumns(this.weekIndex + 1);
+      }, 3000);
+    });
   }
 
   approve(): void {
     this.editingItem.status = TaskStatus.Approved;
+    this.isApproveSaving = true;
+    this.taskService.setStatus(this.editingItem, editResult => {
+      var existingTask = this.getTask(this.editingUserTask, this.editingItem.date);
+      existingTask.status = this.editingItem.status;
+      this.isApproveSaving = false;
+      this.saved = true;
+      setTimeout(() => {
+        this.saved = false;
+        this.isEditing = false;
+        this.fillColumns(this.weekIndex - 1);
+        this.fillColumns(this.weekIndex + 1);
+      }, 3000);
+    });
   }
 }

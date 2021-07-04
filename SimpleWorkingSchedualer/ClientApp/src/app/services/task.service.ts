@@ -23,4 +23,8 @@ export class TaskService {
     task.date = DateHelper.addDays(task.date);
     this.httpClient.post<TaskModel>('api/task', task, callback);
   }
+
+  public setStatus(task: TaskModel, callback: (task: TaskModel) => void): void {
+    this.httpClient.put('api/task', task, callback);
+  }
 }

@@ -30,10 +30,7 @@ namespace SimpleWorkingSchedualer.Controllers
         {
             try
             {
-                var token = Request.Headers["token"];
-
-                if (token == StringValues.Empty)
-                    throw new Exception("invalid token");
+                var token = GetToken();
 
                 var users = await dbContext.Users
                     .Include(f => f.UserTasks).ThenInclude(f => f.UserTaskStatusHistories)
@@ -54,16 +51,7 @@ namespace SimpleWorkingSchedualer.Controllers
         {
             try
             {
-                var token = Request.Headers["token"];
-
-                if (token == StringValues.Empty)
-                    throw new Exception("invalid token");
-
-                var user = await dbContext.Users
-                    .FirstOrDefaultAsync(f => f.Token == token.ToString());
-
-                if (user == null)
-                    throw new Exception("invalid token");
+                var user = await GetUserAsync();
 
                 var task = model.Id == 0 ? new StorageModels.UserTask() : await dbContext.UserTasks.FirstOrDefaultAsync(f => f.Id == model.Id);
 
@@ -71,10 +59,12 @@ namespace SimpleWorkingSchedualer.Controllers
                 task.Title = model.Title;
                 task.TaskDate = model.Date.Date;
                 task.User = user;
-                task.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = (StorageModels.UserTaskStatusHistory.TaskStatus)model.Status });
 
                 if (task.Id == 0)
+                {
                     await dbContext.UserTasks.AddAsync(task);
+                    task.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = StorageModels.UserTaskStatusHistory.TaskStatus.Pending });
+                }
 
                 await dbContext.SaveChangesAsync();
 
@@ -84,6 +74,52 @@ namespace SimpleWorkingSchedualer.Controllers
             {
                 return new ApiResult<TaskResult>(exception);
             }
+        }
+
+
+
+        [HttpPut]
+        public async Task<ApiResult<TaskResult>> Put([FromBody] TaskModel model)
+        {
+            try
+            {
+                var user = await GetUserAsync();
+
+                var userTask = await dbContext.UserTasks.FirstOrDefaultAsync(f => f.Id == model.Id);
+
+                userTask.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = (StorageModels.UserTaskStatusHistory.TaskStatus)model.Status });
+
+                await dbContext.SaveChangesAsync();
+
+                return new ApiResult<TaskResult>(new TaskResult(userTask));
+            }
+            catch (Exception exception)
+            {
+                return new ApiResult<TaskResult>(exception);
+            }
+        }
+
+        private async Task<StorageModels.User> GetUserAsync()
+        {
+            StringValues token = GetToken();
+
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(f => f.Token == token.ToString());
+
+            if (user == null)
+                throw new Exception("invalid token");
+
+            return user;
+        }
+
+        private StringValues GetToken()
+        {
+            var token = Request.Headers["token"];
+
+            if (token == StringValues.Empty)
+                throw new Exception("invalid token");
+
+            return token;
         }
     }
 }
