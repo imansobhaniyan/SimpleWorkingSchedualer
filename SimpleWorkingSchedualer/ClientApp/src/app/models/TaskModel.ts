@@ -16,13 +16,16 @@ export default class TaskModel {
         return newTask;
     }
 
-    public static extend(oldTask: TaskModel, newTask: TaskModel): void {
+    public static extend(oldTask: TaskModel, newTask: TaskModel): TaskModel {
+        if (!oldTask)
+            oldTask = new TaskModel();
         oldTask.date = new Date(Date.parse(newTask.date.toString()));
         oldTask.date.setHours(0, 0, 0, 0);
         oldTask.description = newTask.description;
         oldTask.id = newTask.id;
         oldTask.status = newTask.status;
         oldTask.title = newTask.title;
+        return oldTask;
     }
 }
 

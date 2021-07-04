@@ -67,12 +67,17 @@ namespace SimpleWorkingSchedualer.Controllers
                 if (task.Id == 0)
                 {
                     await dbContext.UserTasks.AddAsync(task);
-                    task.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = StorageModels.UserTaskStatusHistory.TaskStatus.Pending });
                 }
+
+                task.UserTaskStatusHistories.Add(new StorageModels.UserTaskStatusHistory { Status = StorageModels.UserTaskStatusHistory.TaskStatus.Pending });
 
                 await dbContext.SaveChangesAsync();
 
-                return new ApiResult<TaskResult>(new TaskResult(task));
+                var result = new TaskResult(task);
+
+                await defaultHubClient.AddOrUpdateTask(result, new UserTaskResult(user));
+
+                return new ApiResult<TaskResult>(result);
             }
             catch (Exception exception)
             {

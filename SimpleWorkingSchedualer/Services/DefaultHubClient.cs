@@ -19,6 +19,11 @@ namespace SimpleWorkingSchedualer.Services
             this.defaultHub = defaultHub;
         }
 
+        public async Task AddOrUpdateTask(TaskResult result, UserTaskResult userTaskResult)
+        {
+            await defaultHub.Clients.All.SendAsync("addOrUpdateTask", userTaskResult, result);
+        }
+
         public async Task UpdateStatus(TaskResult result)
         {
             await defaultHub.Clients.All.SendAsync("updateStatus", result);

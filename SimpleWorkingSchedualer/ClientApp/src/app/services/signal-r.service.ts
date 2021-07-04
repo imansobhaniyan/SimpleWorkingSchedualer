@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr'
 import TaskModel from '../models/TaskModel';
+import UserTaskModel from '../models/UserTaskModel';
 
 
 @Injectable({
@@ -25,6 +26,12 @@ export class SignalRService {
       .start()
       .then(() => console.log('Connection started'))
       .catch(err => console.log('Error while starting connection: ' + err))
+  }
+
+  public onTaskAddOrUpdated(callback: (userTask: UserTaskModel, taskModel: TaskModel) => void): void {
+    this.hubConnection.on('addOrUpdateTask', (userTask, editResult) => {
+      callback(userTask, editResult);
+    });
   }
 
   public onUpdateStatus(callback: (taskModel: TaskModel) => void): void {

@@ -47,6 +47,9 @@ export class HomeComponent {
     signalRService.onUpdateStatus((updated: TaskModel) => {
       this.statusUpdated(updated);
     });
+    signalRService.onTaskAddOrUpdated((userTask: UserTaskModel, addOrUpdated: TaskModel) => {
+      this.taskAddOrUpdated(userTask, addOrUpdated);
+    });
     this.fillColumns();
     this.loadTasks();
   }
@@ -82,6 +85,7 @@ export class HomeComponent {
     this.editingUserTask = userTask;
     this.isEditing = true;
     this.editingItem = TaskModel.clone(existingTask);
+    this.editingItem.date = column.value;
   }
 
   cancelEditing(): void {
@@ -91,19 +95,11 @@ export class HomeComponent {
   save(): void {
     this.isSaving = true;
     this.taskService.save(this.editingItem, editResult => {
-      editResult.date = new Date(Date.parse(editResult.date.toString()));
-      if (!this.editingItem.id) {
-        this.editingUserTask.taskResults.push(editResult);
-      }
-      var existingTask = this.getTask(this.editingUserTask, editResult.date);
-      TaskModel.extend(existingTask, editResult);
       this.isSaving = false;
       this.saved = true;
       setTimeout(() => {
         this.saved = false;
         this.isEditing = false;
-        this.fillColumns(this.weekIndex - 1);
-        this.fillColumns(this.weekIndex + 1);
       }, 3000);
     });
   }
@@ -156,6 +152,29 @@ export class HomeComponent {
         if (task.id == taskModel.id)
           task.status = taskModel.status;
       }
+    }
+
+    this.fillColumns(this.weekIndex - 1);
+    this.fillColumns(this.weekIndex + 1);
+  }
+
+  taskAddOrUpdated(this: HomeComponent, editUserTask: UserTaskModel, editResult: TaskModel): void {
+
+    editResult.date = new Date(Date.parse(editResult.date.toString()));
+
+    if (!this.editingUserTask)
+      for (let index = 0; index < this.userTasks.length; index++) {
+        const userTask = this.userTasks[index];
+        if (userTask.id == editUserTask.id)
+          this.editingUserTask = userTask;
+      }
+
+    var existingTask = this.getTask(this.editingUserTask, editResult.date);
+    
+    let newTask = TaskModel.extend(existingTask, editResult);
+
+    if (existingTask == null) {
+      this.editingUserTask.taskResults.push(newTask);
     }
 
     this.fillColumns(this.weekIndex - 1);
