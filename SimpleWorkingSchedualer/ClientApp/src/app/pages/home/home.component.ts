@@ -28,7 +28,7 @@ export class HomeComponent {
   isSaving: boolean;
 
   isRejectSaving: boolean;
-  
+
   isApproveSaving: boolean;
 
   saved: boolean;
@@ -127,7 +127,7 @@ export class HomeComponent {
     this.updateStatus();
   }
 
-  private updateStatus(){
+  private updateStatus() {
     this.taskService.setStatus(this.editingItem, editResult => {
       var existingTask = this.getTask(this.editingUserTask, this.editingItem.date);
       existingTask.status = this.editingItem.status;
