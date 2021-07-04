@@ -20,6 +20,10 @@ export class HomeComponent {
 
   weekIndex: number;
 
+  weekNumber: number;
+
+  weekText: string;
+
   taskService: TaskService;
 
   userTasks: UserTaskModel[];
@@ -62,6 +66,13 @@ export class HomeComponent {
       this.columns.push(new ColumnModel(date));
       date = DateHelper.addDays(date);
     } while (this.columns.length < 7);
+
+    let firstDay = this.columns[0].value.getDate();
+    let lastDay = this.columns[this.columns.length - 1].value.getDate();
+    var firstMonthName = this.columns[0].value.toLocaleString('default', { month: 'short' });
+    var lastMonthName = this.columns[this.columns.length - 1].value.toLocaleString('default', { month: 'short' });
+    this.weekText = firstDay + (firstMonthName != lastMonthName ? " " + firstMonthName : "") + "-" + lastDay + " " + lastMonthName;
+    this.weekNumber = DateHelper.getWeekNumber(this.columns[0].value);
   }
 
   private loadTasks(): void {
@@ -170,7 +181,7 @@ export class HomeComponent {
       }
 
     var existingTask = this.getTask(this.editingUserTask, editResult.date);
-    
+
     let newTask = TaskModel.extend(existingTask, editResult);
 
     if (existingTask == null) {

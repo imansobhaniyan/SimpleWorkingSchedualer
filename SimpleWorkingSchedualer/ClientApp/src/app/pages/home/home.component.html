@@ -1,7 +1,7 @@
 <div class="row mt-5">
   <div class="col-md-9">
     <fa-icon [icon]="faLongArrowDown"></fa-icon>
-    <h1 class="d-inline">2-8 Dec 2018 [Week #49]</h1>
+    <h1 class="d-inline">{{this.weekText}} [Week #{{this.weekNumber}}]</h1>
   </div>
   <div class="col-md-3 text-right">
     <button class="btn btn-secondary btn-sm w-25 mx-2" (click)="this.fillColumns(this.weekIndex - 1)">&lt;&lt;</button>

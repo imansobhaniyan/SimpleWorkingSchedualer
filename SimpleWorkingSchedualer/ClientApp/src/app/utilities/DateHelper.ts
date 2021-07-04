@@ -24,4 +24,11 @@ export default class DateHelper {
     public static getDayName(date: Date): string {
         return this.days[date.getDay()];
     }
+
+    public static getWeekNumber(date: Date): number {
+        var start = new Date(date.getFullYear(), 0, 0);
+        var diff = (date.getTime() - start.getTime()) + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000);
+        var oneWeek = 1000 * 60 * 60 * 24 * 7;
+        return Math.floor(diff / oneWeek);
+    }
 }
